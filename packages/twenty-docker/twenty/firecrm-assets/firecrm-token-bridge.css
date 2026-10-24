@@ -1,0 +1,4 @@
+/* Typography from FireCRM design/tokens.css; T30 owns the complete generated map. */
+html:root {
+  --t-font-family: "Public Sans", "IBM Plex Sans Arabic", system-ui, sans-serif;
+}
