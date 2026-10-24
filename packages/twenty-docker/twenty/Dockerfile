@@ -101,7 +101,10 @@ RUN apk add --no-cache \
     'jq>=1.8.2-r0'
 
 COPY ./packages/twenty-docker/twenty/entrypoint.sh /app/entrypoint.sh
+COPY ./packages/twenty-docker/twenty/firecrm-launch.cjs /app/firecrm-launch.cjs
+COPY ./packages/twenty-docker/twenty/firecrm-preload.cjs /app/firecrm-preload.cjs
 RUN chmod +x /app/entrypoint.sh
+RUN chmod 0600 /app/firecrm-launch.cjs && chmod 0644 /app/firecrm-preload.cjs
 WORKDIR /app/packages/twenty-server
 
 ARG APP_VERSION
@@ -159,10 +162,10 @@ RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
 RUN mkdir -p /app/.local-storage /app/packages/twenty-server/.local-storage && \
     chown 1000:1000 /app/.local-storage /app/packages/twenty-server/.local-storage
 
-USER 1000
+USER root
 
 CMD ["node", "dist/main"]
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["node", "/app/firecrm-launch.cjs"]
 
 
 # ===========================================================================
