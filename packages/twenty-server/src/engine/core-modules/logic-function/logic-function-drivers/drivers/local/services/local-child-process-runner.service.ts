@@ -162,8 +162,12 @@ export class LocalChildProcessRunnerService {
       stdout: string;
       stderr: string;
     }>((resolve) => {
-      // Strip NODE_OPTIONS to prevent tsx loader from being inherited
-      const { NODE_OPTIONS: _n1, ...cleanProcessEnv } = process.env;
+      // Inherit startup basics only; configuration and credentials stay in the parent.
+      const cleanProcessEnv = Object.fromEntries(
+        ['PATH', 'HOME', 'NODE_ENV', 'TZ', 'LANG'].flatMap((key) =>
+          process.env[key] === undefined ? [] : [[key, process.env[key]]],
+        ),
+      );
       const { NODE_OPTIONS: _n2, ...cleanUserEnv } = env;
 
       const child = spawn(process.execPath, [runnerPath], {
